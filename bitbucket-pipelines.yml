@@ -7,6 +7,8 @@ definitions:
           - export DOCKER_COMPOSE_ENV=$DOCKER_COMPOSE_ENV;
           - docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ./${DOCKER_COMPOSE_ENV} pull
           - docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ./${DOCKER_COMPOSE_ENV} up -d --remove-orphans --force-recreate
+
+pipelines:
   branches:
     altexsoft-dev:
       - stage:
