@@ -7,6 +7,7 @@ definitions:
           - export DOCKER_COMPOSE_ENV=$DOCKER_COMPOSE_ENV;
           - mkdir -p $DEPLOY_FOLDER
           - cp ./${DOCKER_COMPOSE_FILE} $DEPLOY_FOLDER
+          - cp ./${DOCKER_COMPOSE_ENV} $DEPLOY_FOLDER
           - cp -r ./docker $DEPLOY_FOLDER
           - cd $DEPLOY_FOLDER
           - docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ./${DOCKER_COMPOSE_ENV} pull
