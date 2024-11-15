@@ -1,0 +1,21 @@
+definitions:
+  steps:
+    - step: &docker-reload
+        name: "Docker Reload"
+        script:
+          - export DOCKER_COMPOSE_FILE=$DOCKER_COMPOSE_FILE;
+          - export DOCKER_COMPOSE_ENV=$DOCKER_COMPOSE_ENV;
+          - docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ./${DOCKER_COMPOSE_ENV} pull
+          - docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ./${DOCKER_COMPOSE_ENV} up -d --remove-orphans --force-recreate
+  branches:
+    altexsoft-dev:
+      - stage:
+          name: "Deployment"
+          deployment: altexsoft-dev
+          steps:
+            - step:
+                <<: *docker-reload
+                runs-on:
+                  - self.hosted
+                  - linux.shell
+                  - db.demo
