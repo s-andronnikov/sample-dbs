@@ -5,6 +5,10 @@ definitions:
         script:
           - export DOCKER_COMPOSE_FILE=$DOCKER_COMPOSE_FILE;
           - export DOCKER_COMPOSE_ENV=$DOCKER_COMPOSE_ENV;
+          - mkdir $DEPLOY_FOLDER
+          - cp ./${DOCKER_COMPOSE_FILE} $DEPLOY_FOLDER
+          - cp -r ./docker $DEPLOY_FOLDER
+          - cd $DEPLOY_FOLDER
           - docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ./${DOCKER_COMPOSE_ENV} pull
           - docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ./${DOCKER_COMPOSE_ENV} up -d --remove-orphans --force-recreate
 

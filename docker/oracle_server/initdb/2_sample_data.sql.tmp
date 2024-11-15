@@ -1,0 +1,30 @@
+-- Drop the table if it exists
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Period';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -942 THEN
+            RAISE;
+        END IF;
+END;
+/
+
+-- Create the Period table
+CREATE TABLE Period (
+    name VARCHAR2(50) NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    type VARCHAR2(50) NOT NULL,
+    id RAW(16) DEFAULT SYS_GUID() NOT NULL, -- UUID equivalent
+    CONSTRAINT pk_period PRIMARY KEY (id)
+);
+
+-- Create an index on the "type" column
+CREATE INDEX ix_period_type ON Period (type);
+
+-- Insert values into the Period table
+INSERT INTO Period (name, start_date, end_date, type, id) VALUES
+('Tax Year 2020', DATE '2020-01-01', DATE '2020-12-31', 'regular', HEXTORAW('3A6794E87B6A4868AFE8079F4106D961'));
+
+INSERT INTO Period (name, start_date, end_date, type, id) VALUES
+('Tax Year 2021', DATE '2021-01-01', DATE '2021-12-31', 'regular', HEXTORAW('F3A79310D0BE49BEB40FB783694A4CE9'));

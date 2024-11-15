@@ -30,18 +30,12 @@ services:
       - MSSQL_SERVER_PASSWORD=${MSSQL_SERVER_PASSWORD}
       - MSSQL_SERVER_DATABASE=${MSSQL_SERVER_DATABASE}
     volumes:
-      - ./docker/mssql_server/initdb:/docker-entrypoint-initdb.d:ro
+      - ./docker/mssql_server/initdb:/container-entrypoint-initdb.d:ro
     depends_on:
       mssql_server:
         condition: service_healthy
     entrypoint:
       - docker-entrypoint-initdb.d/init_db.sh
-#    command: >
-#      bash -c '
-#      /opt/mssql-tools/bin/sqlcmd -S ${MSSQL_SERVER_HOST} -U sa -P ${MSSQL_SERVER_SA_PASSWORD} -d master -i docker-entrypoint-initdb.d/init.sql;
-#      /opt/mssql-tools/bin/sqlcmd -S ${MSSQL_SERVER_HOST} -U sa -P ${MSSQL_SERVER_SA_PASSWORD} -d master -i docker-entrypoint-initdb.d/sample_data.sql;
-#      echo "All done!";
-#      '
 
 # https://hub.docker.com/r/gvenzl/oracle-free
   oracle_server:
@@ -65,3 +59,10 @@ services:
       retries: 10
       start_period: 5s
       start_interval: 5s
+
+
+volumes:
+  mssql_server_data:
+    driver: local
+  oracle_server_data:
+    driver: local
