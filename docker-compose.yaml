@@ -7,7 +7,7 @@ services:
     restart: on-failure
     volumes:
       - mssql_server_data:/var/opt/mssql
-      - ./docker/mssql_server/initdb:/container-entrypoint-initdb.d:ro
+      - ./docker/mssql_server/initdb:/docker-entrypoint-initdb.d:ro
 
   oracle_server:
     extends:
@@ -17,10 +17,40 @@ services:
     restart: on-failure
     volumes:
       - oracle_server_data:/opt/oracle/oradata
-      - ./docker/oracle_server/initdb:/container-entrypoint-initdb.d:ro
+      - ./docker/oracle_server/initdb:/docker-entrypoint-initdb.d:ro
+
+  mariadb_server:
+    extends:
+      file: common.yaml
+      service: mariadb_server
+    hostname: ${MARIADB_SERVER_HOST}
+    restart: on-failure
+    volumes:
+      - mariadb_server_data:/var/lib/mysql
+      - ./docker/mariadb_server/initdb:/docker-entrypoint-initdb.d:ro
+
+  mysql_server:
+    extends:
+      file: common.yaml
+      service: mysql_server
+    hostname: ${MYSQL_SERVER_HOST}
+    restart: on-failure
+    volumes:
+      - mysql_server_data:/var/lib/mysql
+      - ./docker/mysql_server/initdb:/docker-entrypoint-initdb.d:ro
+
+  adminer:
+    extends:
+      file: common.yaml
+      service: adminer
+
 
 volumes:
   mssql_server_data:
     driver: local
   oracle_server_data:
+    driver: local
+  mariadb_server_data:
+    driver: local
+  mysql_server_data:
     driver: local

@@ -55,3 +55,46 @@ services:
       retries: 10
       start_period: 15s
       start_interval: 5s
+
+  mariadb_server:
+    hostname: ${MARIADB_SERVER_HOST}
+    image: mariadb:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} # Root password for the database
+      - MARIADB_DATABASE=${MARIADB_DATABASE}          # Name of the default database
+      - MARIADB_USER=${MARIADB_USER}                  # Application user
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}          # Password for the application user
+    ports:
+      - ${MARIADB_PORT}:3306                          # Maps MariaDB port
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  mysql_server:
+    hostname: ${MYSQL_SERVER_HOST}
+    image: mysql:latest # Uses the latest official MySQL image
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} # Root password for the MySQL instance
+      - MYSQL_DATABASE=${MYSQL_DATABASE}          # Default database that will be created
+      - MYSQL_USER=${MYSQL_USER}                  # Non-root application user
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}          # Password for the application user
+    ports:
+      - ${MYSQL_PORT}:3306                        # Maps MySQL server port to local port
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "${MYSQL_SERVER_HOST}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+      start_interval: 5s
+
+  adminer:
+    image: adminer:latest # Latest Adminer image
+    ports:
+      - ${ADMINER_PORT}:8080 # Maps Adminer port to localhost
+    restart: always
